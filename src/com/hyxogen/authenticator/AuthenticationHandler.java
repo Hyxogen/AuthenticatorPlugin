@@ -15,9 +15,11 @@ public class AuthenticationHandler {
 	public static final int COOLDOWN = 30 * 60;
 	
 	public final ChallengeHandler challengeHandler;
+	public final AuthenticatorPlugin plugin;
 
-	public AuthenticationHandler(ChallengeHandler challengeHandler) {
+	public AuthenticationHandler(ChallengeHandler challengeHandler, AuthenticatorPlugin plugin) {
 		this.challengeHandler = challengeHandler;
+		this.plugin = plugin;
 	}
 	
 	public boolean needsAuthentication(Player player) {
@@ -27,16 +29,18 @@ public class AuthenticationHandler {
 			return true;
 		
 		long current = System.currentTimeMillis();
-		User user = UserHandler.getUser(player.getUniqueId());
+		User user = plugin.getUserHandler().getUser(player.getUniqueId(), false);
 		
-		UserLogin lastLogin = user.lastLogin;
+		Session session = user.current;
+		
+		//TODO Dit session systeem werkt nog niet helemaal
 		
 		//TODO cache result zodat dit niet iedere movement gechecked moet worden.
 		//We zouden ook slowness 100000 kunnen geven zodat ze niet kunnen bewegen
 		//Dit werkt niet voor commands en chat berichten
-		if(player.getAddress().getAddress().getAddress() != lastLogin.address)
+		if(player.getAddress().getAddress().getAddress() != session.address)
 			return true;
-		if(((lastLogin.time - current) / 1000L) > COOLDOWN)
+		if(((session.begin - current) / 1000L) > COOLDOWN)
 			return true;
 		return false;
 	}

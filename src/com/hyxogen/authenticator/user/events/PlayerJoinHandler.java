@@ -21,9 +21,11 @@ import com.hyxogen.authenticator.util.Permissions;
 public class PlayerJoinHandler implements Listener {
 	
 	public final AuthenticationHandler authHandler;
+	public final UserHandler userHandler;
 	
-	public PlayerJoinHandler(AuthenticationHandler authHandler) {
+	public PlayerJoinHandler(AuthenticationHandler authHandler, UserHandler userHandler) {
 		this.authHandler = authHandler;
+		this.userHandler = userHandler;
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
@@ -37,7 +39,7 @@ public class PlayerJoinHandler implements Listener {
 				if(!authHandler.needsAuthentication(player))
 					return;
 				
-				User user = UserHandler.getUser(player.getUniqueId());
+				User user = userHandler.getUser(player.getUniqueId(), true);
 				authHandler.challengeHandler.challengeUser(user, new IChallenge() {
 					
 					@Override

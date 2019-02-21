@@ -7,27 +7,19 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import com.hyxogen.authenticator.util.CryptoUtils;
 
-/**
- * 
- * @author Daan Meijer
- *
- */
 public class UserFactory {
-
-	public static User createUser(UUID uuid) {
-		assert !UserHandler.exists(uuid);
-		byte[] key = CryptoUtils.generateKey(256);
-
-		byte[][] codes = CryptoUtils.generateKeys(48, 6);
-		String[] stringCodes = new String[User.NUM_BACKUP_CODES];
-
-		for (int i = 0; i < User.NUM_BACKUP_CODES; i++) {
-			stringCodes[i] = Base64.encodeBase64String(codes[i]);
-			codes[i] = DigestUtils.sha1(codes[i]);
+	
+	public static String[] createUser(UUID uuid) {
+		final byte[] key = CryptoUtils.generateKey(256);
+		final byte[][] backupCodes = CryptoUtils.generateKeys(48, 6);
+		String[] result = new String[6];
+		
+		for(int i = 0; i < 6; i++) {
+			result[i] = Base64.encodeBase64String(backupCodes[i]);
+			backupCodes[i] = DigestUtils.sha1(backupCodes[i]);
 		}
 		
-		User user = new User(uuid, codes, key);
-		user.tempCodes = stringCodes;
-		return user;
+		new User(uuid, key, backupCodes);
+		return result;
 	}
 }

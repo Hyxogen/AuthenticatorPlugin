@@ -12,13 +12,15 @@ import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.codec.digest.HmacUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.hyxogen.authenticator.user.UserHandler;
+
 /**
  * 
  * @author Daan Meijer
  * 
  */
 public class AuthenticatorPlugin extends JavaPlugin {
-
+	
 	public void onEnable() {
 		
 	}
@@ -52,5 +54,9 @@ public class AuthenticatorPlugin extends JavaPlugin {
 			System.out.println(Math.floorMod(bin_code, (int) Math.pow(10, 6)));
 			Thread.sleep(1000);
 		}
+	}
+	
+	public UserHandler getUserHandler() {
+		return null; //TODO define this
 	}
 }

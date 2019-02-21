@@ -29,7 +29,7 @@ public class PasswordGenerator {
 	 */
 	@Deprecated
 	public PasswordGenerator(final User user) {
-		this.key = user.key;
+		this.key = user.getKey();
 	}
 	
 	/**
